@@ -53,9 +53,9 @@ function App() {
             exact
             path={ROUTES.SIGN_UP}
             element={
-              // <ProtectedRoute user={user ? true : false}>
-              <SignUp navigate={navigate} />
-              // </ProtectedRoute>
+              <ProtectedRoute user={user ? true : false}>
+                <SignUp navigate={navigate} />
+              </ProtectedRoute>
             }
           />
           <Route
