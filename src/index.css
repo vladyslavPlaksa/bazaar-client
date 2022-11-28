@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.ais-SearchBox {
+  width: 100%;
+}
+
+.ais-SearchBox-form {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ais-SearchBox-input {
+  width: 90%;
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 10px 16px;
+}
+.ais-SearchBox-submit {
+  padding-left: 20px;
+}
+.ais-SearchBox-submitIcon {
+  width: 30px;
+  height: 30px;
+}
+.ais-Hits-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
