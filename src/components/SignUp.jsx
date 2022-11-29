@@ -9,13 +9,16 @@ import { addDoc } from "firebase/firestore";
 const SignUp = ({ navigate }) => {
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState();
-  const [userName, setUserName] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(null);
+  // const [userName, setUserName] = useState(null);
+  // const [phoneNumber, setPhoneNumber] = useState(null);
 
   useEffect(() => {
     console.log("use effect: ", imageUrl, userName);
 
-    if (imageUrl != undefined && userName != null) {
+    if (imageUrl != undefined) {
+      const userName = form.target.userName.value;
+      const phoneNumber = form.target.phoneNumber.value;
+      
       updateProfile(auth.currentUser, {
         displayName: userName,
         photoURL: imageUrl,
@@ -29,7 +32,7 @@ const SignUp = ({ navigate }) => {
         });
       });
     }
-  }, [imageUrl, userName]);
+  }, [imageUrl]);
 
   const signUpUser = (form) => {
     form.preventDefault();
@@ -56,8 +59,8 @@ const SignUp = ({ navigate }) => {
             setImageUrl(null);
           }
 
-          setUserName(form.target.userName.value);
-          setPhoneNumber(form.target.phoneNumber.value);
+          // setUserName(form.target.userName.value);
+          // setPhoneNumber(form.target.phoneNumber.value);
         })
         .catch((err) => {
           console.error(err.message);
