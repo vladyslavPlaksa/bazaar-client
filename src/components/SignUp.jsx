@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { addDoc } from "firebase/firestore";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 import { auth, colRefUserInfo, storage } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
@@ -15,47 +15,48 @@ const SignUp = ({ navigate }) => {
 
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState();
-  const signUpForm = useRef(null);
+  const [form, setForm] = useState(null);
 
-  const signUpUser = (form) => {
-    form.preventDefault();
+  useEffect(() => {
+    if (form !== null) {
+      form.preventDefault();
 
-    const email = form.target.login.value;
-    const password = form.target.password.value;
+      // console.log(form);
 
-    if (password == form.target.repeatPassword.value) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((cred) => {
-          // console.log("Create user: ", cred);
+      const email = form.target.login.value;
+      const password = form.target.password.value;
 
-          if (imageUpload !== null) {
-            const imageRef = ref(storage, `${cred.user.uid}/user-photo`);
-            uploadBytes(imageRef, imageUpload).then((snapshot) => {
-              getDownloadURL(snapshot.ref).then((url) => {
-                setImageUrl(url);
-                // console.log("Upload img: ", url);
+      if (password == form.target.repeatPassword.value) {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((cred) => {
+            // console.log("Create user: ", cred);
+
+            if (imageUpload !== null) {
+              const imageRef = ref(storage, `${cred.user.uid}/user-photo`);
+              uploadBytes(imageRef, imageUpload).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((url) => {
+                  setImageUrl(url);
+                  // console.log("Upload img: ", url);
+                });
               });
-            });
-          } else {
-            console.warn("User didn't uploaded profile photo");
-            setImageUrl(null);
-          }
-        })
-        .catch((err) => {
-          console.error(err.message);
-        });
-    } else {
-      alert("Password must be equal");
+            } else {
+              console.warn("User didn't uploaded profile photo");
+              setImageUrl(null);
+            }
+          })
+          .catch((err) => {
+            console.error(err.message);
+          });
+      } else {
+        alert("Password must be equal");
+      }
     }
-  };
+  }, [form]);
 
   useEffect(() => {
     if (imageUrl !== undefined) {
-      console.log(signUpForm.current.userName.value);
-      console.log(signUpForm.current.phoneNumber.value);
-
-      const userName = signUpForm.current.userName.value;
-      const phoneNumber = signUpForm.current.phoneNumber.value;
+      const userName = form.target.userName.value;
+      const phoneNumber = form.target.phoneNumber.value;
 
       updateProfile(auth.currentUser, {
         displayName: userName,
@@ -66,6 +67,7 @@ const SignUp = ({ navigate }) => {
           phoneNumber: `+48${phoneNumber}`,
         }).then(() => {
           console.warn("Data was updated");
+          form.target.reset();
           navigate(ROUTES.HOMEPAGE);
         });
       });
@@ -76,8 +78,7 @@ const SignUp = ({ navigate }) => {
     <div className='flex justify-center items-center flex-col h-[75vh]'>
       <div className='bg-gray-300 p-5 rounded max-w-[400px] mx-[5%]'>
         <form
-          onSubmit={signUpUser}
-          ref={signUpForm}
+          onSubmit={(form) => setForm(form)}
           className='flex justify-center items-center flex-col'>
           <input
             type='text'
