@@ -51,8 +51,8 @@ const SignUp = ({ navigate }) => {
 
   useEffect(() => {
     if (imageUrl !== undefined) {
-      console.log(signUpForm.current.userName.value);
-      console.log(signUpForm.current.phoneNumber.value);
+      // console.log(signUpForm.current.userName.value);
+      // console.log(signUpForm.current.phoneNumber.value);
 
       const userName = signUpForm.current.userName.value;
       const phoneNumber = signUpForm.current.phoneNumber.value;
