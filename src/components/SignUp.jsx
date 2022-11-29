@@ -13,7 +13,7 @@ const SignUp = ({ navigate }) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
 
   useEffect(() => {
-    console.log("use effect: ", imageUrl, userName);
+    // console.log("use effect: ", imageUrl, userName);
 
     if (imageUrl != undefined && userName != null) {
       updateProfile(auth.currentUser, {
@@ -43,7 +43,7 @@ const SignUp = ({ navigate }) => {
     if (password == form.target.repeatPassword.value) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((cred) => {
-          console.log("Create user: ", cred);
+          // console.log("Create user: ", cred);
           form.target.reset();
 
           if (imageUpload !== null) {
@@ -51,7 +51,7 @@ const SignUp = ({ navigate }) => {
             uploadBytes(imageRef, imageUpload).then((snapshot) => {
               getDownloadURL(snapshot.ref).then((url) => {
                 setImageUrl(url);
-                console.log("Upload img: ", url);
+                // console.log("Upload img: ", url);
               });
             });
           } else {

@@ -10,7 +10,7 @@ const UserAnnouncements = () => {
   useEffect(() => {
     const q = query(
       colRefAnnouncement,
-      where("uid", "==", `${auth.currentUser.uid}`),
+      where("uid", "==", `${auth?.currentUser?.uid}`),
       orderBy("createdAt", "desc")
     );
 
@@ -19,13 +19,11 @@ const UserAnnouncements = () => {
       snapshot.docs.map((doc) => {
         docs.push({ ...doc.data(), id: doc.id });
       });
+      // console.log(docs);
       setDocsData(docs);
     });
   }, []);
 
-  useEffect(() => {
-    console.log(docsData);
-  }, [docsData]);
   return (
     <div className='mx-[15%] md:mx-[10%]'>
       <div className='mt-4 flex flex-wrap justify-around'>

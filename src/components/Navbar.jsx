@@ -25,7 +25,7 @@ const NavbarAuth = ({ navigate }) => {
         navigate(ROUTES.HOMEPAGE);
       })
       .catch((err) => {
-        console.log(err.message);
+        console.error(err.message);
       });
   };
   return (
