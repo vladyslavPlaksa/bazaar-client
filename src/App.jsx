@@ -8,10 +8,10 @@ import {
   Homepage,
   Navbar,
   Product,
-  ProtectedRoute,
+  ProtectedRouteAuthorized,
+  ProtectedRouteNonAuthorized,
   SignIn,
   SignUp,
-  UserAnnouncements,
   WrongPage,
 } from "./components";
 import { auth } from "./api/firebase";
@@ -23,7 +23,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
     // console.log(db);
 
     onAuthStateChanged(auth, (user) => {
@@ -44,36 +44,27 @@ function App() {
             exact
             path={ROUTES.SIGN_IN}
             element={
-              <ProtectedRoute user={user ? true : false}>
+              <ProtectedRouteAuthorized user={user ? true : false}>
                 <SignIn navigate={navigate} />
-              </ProtectedRoute>
+              </ProtectedRouteAuthorized>
             }
           />
           <Route
             exact
             path={ROUTES.SIGN_UP}
             element={
-              <ProtectedRoute user={user ? true : false}>
+              <ProtectedRouteAuthorized user={user ? true : false}>
                 <SignUp navigate={navigate} />
-              </ProtectedRoute>
+              </ProtectedRouteAuthorized>
             }
           />
           <Route
             exact
             path={ROUTES.ACCOUNT}
             element={
-              <ProtectedRoute user={user ? true : false}>
+              <ProtectedRouteNonAuthorized user={user ? true : false}>
                 <Account navigate={navigate} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            exact
-            path={ROUTES.USER_ANNOUNCEMENTS}
-            element={
-              <ProtectedRoute user={user ? true : false}>
-                <UserAnnouncements />
-              </ProtectedRoute>
+              </ProtectedRouteNonAuthorized>
             }
           />
           <Route exact path={`${ROUTES.PRODUCT}/:productCode`} element={<Product />} />
