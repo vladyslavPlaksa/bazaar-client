@@ -12,29 +12,6 @@ const SignUp = ({ navigate }) => {
   // const [userName, setUserName] = useState(null);
   // const [phoneNumber, setPhoneNumber] = useState(null);
 
-  useEffect(() => {
-    if (imageUrl != undefined) {
-      const userName = form.target.userName.value;
-      const phoneNumber = form.target.phoneNumber.value;
-
-      console.log("UseEffect 1: ", imageUrl, userName);
-      console.log("UseEffect 2: ", auth.currentUser);
-
-      updateProfile(auth.currentUser, {
-        displayName: userName,
-        photoURL: imageUrl,
-      }).then(() => {
-        addDoc(colRefUserInfo, {
-          uid: auth.currentUser.uid,
-          phoneNumber: `+48${phoneNumber}`,
-        }).then(() => {
-          console.warn("Data was updated");
-          navigate(ROUTES.HOMEPAGE);
-        });
-      });
-    }
-  }, [imageUrl]);
-
   const signUpUser = (form) => {
     form.preventDefault();
 
@@ -70,6 +47,30 @@ const SignUp = ({ navigate }) => {
       alert("Password must be equal");
     }
   };
+
+  useEffect(() => {
+    if (imageUrl !== undefined) {
+      const userName = form.target.userName.value;
+      const phoneNumber = form.target.phoneNumber.value;
+
+      console.log("UseEffect 1: ", imageUrl, userName);
+      console.log("UseEffect 2: ", auth.currentUser);
+
+      updateProfile(auth.currentUser, {
+        displayName: userName,
+        photoURL: imageUrl,
+      }).then(() => {
+        addDoc(colRefUserInfo, {
+          uid: auth.currentUser.uid,
+          phoneNumber: `+48${phoneNumber}`,
+        }).then(() => {
+          console.warn("Data was updated");
+          navigate(ROUTES.HOMEPAGE);
+        });
+      });
+    }
+  }, [imageUrl]);
+
   return (
     <div className='flex justify-center items-center flex-col h-[75vh]'>
       <div className='bg-gray-300 p-5 rounded max-w-[400px] mx-[5%]'>
