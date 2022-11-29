@@ -13,12 +13,13 @@ const SignUp = ({ navigate }) => {
   // const [phoneNumber, setPhoneNumber] = useState(null);
 
   useEffect(() => {
-    console.log("use effect: ", imageUrl, userName);
-
     if (imageUrl != undefined) {
       const userName = form.target.userName.value;
       const phoneNumber = form.target.phoneNumber.value;
-      
+
+      console.log("UseEffect 1: ", imageUrl, userName);
+      console.log("UseEffect 2: ", auth.currentUser);
+
       updateProfile(auth.currentUser, {
         displayName: userName,
         photoURL: imageUrl,
