@@ -34,9 +34,6 @@ const SignUp = ({ navigate }) => {
   const signUpUser = (form) => {
     form.preventDefault();
 
-    setUserName(form.target.userName.value);
-    setPhoneNumber(form.target.phoneNumber.value);
-
     const email = form.target.login.value;
     const password = form.target.password.value;
 
@@ -58,6 +55,9 @@ const SignUp = ({ navigate }) => {
             console.warn("User didn't uploaded profile photo");
             setImageUrl(null);
           }
+          
+          setUserName(form.target.userName.value);
+          setPhoneNumber(form.target.phoneNumber.value);
         })
         .catch((err) => {
           console.error(err.message);
