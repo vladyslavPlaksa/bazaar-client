@@ -27,7 +27,7 @@ function App() {
     // console.log(db);
 
     onAuthStateChanged(auth, (user) => {
-      console.log("user status changed:", user);
+      // console.log("user status changed:", user);
       setUser(user);
     });
   }, []);
