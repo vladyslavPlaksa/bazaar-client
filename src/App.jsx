@@ -23,11 +23,11 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
     // console.log(db);
 
     onAuthStateChanged(auth, (user) => {
-      console.log("user status changed:", user);
+      // console.log("user status changed:", user);
       setUser(user);
     });
   }, []);

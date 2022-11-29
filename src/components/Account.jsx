@@ -16,7 +16,7 @@ const Account = () => {
     const q = query(colRefUserInfo, where("uid", "==", `${auth.currentUser.uid}`));
 
     getDocs(q).then((snapshot) => {
-      console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+      // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
       setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
     });
   }, []);

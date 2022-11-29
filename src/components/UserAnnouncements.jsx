@@ -24,7 +24,7 @@ const UserAnnouncements = () => {
   }, []);
 
   useEffect(() => {
-    console.log(docsData);
+    // console.log(docsData);
   }, [docsData]);
   return (
     <div className='mx-[15%] md:mx-[10%]'>

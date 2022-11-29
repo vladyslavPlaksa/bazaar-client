@@ -15,7 +15,7 @@ const SignIn = ({ navigate }) => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((cred) => {
-        console.log(cred);
+        // console.log(cred);
         form.target.reset();
         navigate(ROUTES.HOMEPAGE);
       })
