@@ -1,41 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc } from "firebase/firestore";
+import { Navigate } from "react-router-dom";
 
 import { auth, colRefUserInfo, storage } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
-import { addDoc } from "firebase/firestore";
 
 const SignUp = ({ navigate }) => {
+  if (auth.currentUser !== null) {
+    console.warn("This page unavaluable when you authorized");
+    return <Navigate to={ROUTES.HOMEPAGE} replace />;
+  }
+
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState();
-  const [userName, setUserName] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(null);
-
-  useEffect(() => {
-    // console.log("use effect: ", imageUrl, userName);
-
-    if (imageUrl != undefined && userName != null) {
-      updateProfile(auth.currentUser, {
-        displayName: userName,
-        photoURL: imageUrl,
-      }).then(() => {
-        addDoc(colRefUserInfo, {
-          uid: auth.currentUser.uid,
-          phoneNumber: `+48${phoneNumber}`,
-        }).then(() => {
-          console.warn("Data was updated");
-          navigate(ROUTES.HOMEPAGE);
-        });
-      });
-    }
-  }, [imageUrl, userName]);
+  const signUpForm = useRef(null);
 
   const signUpUser = (form) => {
     form.preventDefault();
-
-    setUserName(form.target.userName.value);
-    setPhoneNumber(form.target.phoneNumber.value);
 
     const email = form.target.login.value;
     const password = form.target.password.value;
@@ -44,7 +27,6 @@ const SignUp = ({ navigate }) => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((cred) => {
           // console.log("Create user: ", cred);
-          form.target.reset();
 
           if (imageUpload !== null) {
             const imageRef = ref(storage, `${cred.user.uid}/user-photo`);
@@ -66,10 +48,37 @@ const SignUp = ({ navigate }) => {
       alert("Password must be equal");
     }
   };
+
+  useEffect(() => {
+    if (imageUrl !== undefined) {
+      console.log(signUpForm.current.userName.value);
+      console.log(signUpForm.current.phoneNumber.value);
+
+      const userName = signUpForm.current.userName.value;
+      const phoneNumber = signUpForm.current.phoneNumber.value;
+
+      updateProfile(auth.currentUser, {
+        displayName: userName,
+        photoURL: imageUrl,
+      }).then(() => {
+        addDoc(colRefUserInfo, {
+          uid: auth.currentUser.uid,
+          phoneNumber: `+48${phoneNumber}`,
+        }).then(() => {
+          console.warn("Data was updated");
+          navigate(ROUTES.HOMEPAGE);
+        });
+      });
+    }
+  }, [imageUrl]);
+
   return (
     <div className='flex justify-center items-center flex-col h-[75vh]'>
       <div className='bg-gray-300 p-5 rounded max-w-[400px] mx-[5%]'>
-        <form onSubmit={signUpUser} className='flex justify-center items-center flex-col'>
+        <form
+          onSubmit={signUpUser}
+          ref={signUpForm}
+          className='flex justify-center items-center flex-col'>
           <input
             type='text'
             name='login'
