@@ -13,7 +13,7 @@ const SignUp = ({ navigate }) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
 
   useEffect(() => {
-    // console.log("use effect: ", imageUrl, userName);
+    console.log("use effect: ", imageUrl, userName);
 
     if (imageUrl != undefined && userName != null) {
       updateProfile(auth.currentUser, {
@@ -55,7 +55,7 @@ const SignUp = ({ navigate }) => {
             console.warn("User didn't uploaded profile photo");
             setImageUrl(null);
           }
-          
+
           setUserName(form.target.userName.value);
           setPhoneNumber(form.target.phoneNumber.value);
         })
