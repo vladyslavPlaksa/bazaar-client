@@ -7,19 +7,24 @@ import UserAnnouncements from "./UserAnnouncements";
 
 const Account = () => {
   const [userInfo, setUserInfo] = useState(null);
-  const [userPhoto, setUserPhoto] = useState(auth.currentUser.photoURL);
-  const [testPhoto, setTestPhoto] = useState(
-    "https://firebasestorage.googleapis.com/v0/b/game-secondhand-app.appspot.com/o/user-icon-default%2Fuser-default-icon.jpg?alt=media&token=25598f5a-c32f-4c74-b0cd-0a8ef46cb4b1"
-  );
 
+  const userPhoto = auth.currentUser.photoURL;
+  const testPhoto =
+    "https://firebasestorage.googleapis.com/v0/b/game-secondhand-app.appspot.com/o/user-icon-default%2Fuser-default-icon.jpg?alt=media&token=25598f5a-c32f-4c74-b0cd-0a8ef46cb4b1";
   useEffect(() => {
     const q = query(colRefUserInfo, where("uid", "==", `${auth.currentUser.uid}`));
 
     getDocs(q).then((snapshot) => {
-      // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
-      setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+      console.log("data", snapshot);
+      if (snapshot.docs > 0) {
+        console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+        setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+      } else {
+        console.warn("User doesn't have phone number in firestore");
+      }
     });
   }, []);
+
   return (
     <>
       <AddAnnouncementButton />
@@ -71,7 +76,9 @@ const Account = () => {
           className='w-[150px] h-[150px] rounded-full'
         />
         <div>{auth.currentUser.displayName}</div>
-        <div>{userInfo?.phoneNumber}</div>
+        <div>
+          {userInfo !== null ? userInfo.phoneNumber : "Urzytkownik nie podał numer telefonu"}
+        </div>
       </div>
       <UserAnnouncements />
     </>
