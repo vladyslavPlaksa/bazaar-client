@@ -23,9 +23,6 @@ const UserAnnouncements = () => {
     });
   }, []);
 
-  useEffect(() => {
-    // console.log(docsData);
-  }, [docsData]);
   return (
     <div className='mx-[15%] md:mx-[10%]'>
       <div className='mt-4 flex flex-wrap justify-around'>
