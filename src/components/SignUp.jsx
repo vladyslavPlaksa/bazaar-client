@@ -8,10 +8,10 @@ import { auth, colRefUserInfo, storage } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
 
 const SignUp = ({ navigate }) => {
-  if (auth.currentUser !== null) {
-    console.warn("This page unavaluable when you authorized");
-    return <Navigate to={ROUTES.HOMEPAGE} replace />;
-  }
+  // if (auth.currentUser !== null) {
+  //   console.warn("This page unavaluable when you authorized");
+  //   return <Navigate to={ROUTES.HOMEPAGE} replace />;
+  // }
 
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState();
