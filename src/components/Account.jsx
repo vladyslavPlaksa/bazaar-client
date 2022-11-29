@@ -17,7 +17,7 @@ const Account = () => {
     getDocs(q).then((snapshot) => {
       console.log("data", snapshot);
       if (snapshot.docs > 0) {
-        console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+        // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
         setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
       } else {
         console.warn("User doesn't have phone number in firestore");
