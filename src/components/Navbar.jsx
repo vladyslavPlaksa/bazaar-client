@@ -11,17 +11,17 @@ const Navbar = ({ navigate }) => {
   const user = useContext(FirebaseContext);
 
   // useEffect(() => {
-      // console.log(auth);
-      // console.log(db);
-  
-      // onAuthStateChanged(auth, (user) => {
-      //   console.log("user status changed:", user);
-      //   setUser(user);
-      // });
-    // }, []);
+  // console.log(auth);
+  // console.log(db);
+
+  // onAuthStateChanged(auth, (user) => {
+  //   console.log("user status changed:", user);
+  //   setUser(user);
+  // });
+  // }, []);
 
   return (
-    <div className='lg:pr-[5%] text-[20px] md:text-[27px] mb-0 md:mb-5 lg:mb-0 bg-[#9A3737]'>
+    <div className='lg:pr-[5%] text-[20px] md:text-[27px] mb-5 bg-[#9A3737]'>
       {user ? <NavbarAuth navigate={navigate} /> : <NavbarNonAuth />}
     </div>
   );
