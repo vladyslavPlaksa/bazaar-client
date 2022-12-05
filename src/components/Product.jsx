@@ -60,15 +60,31 @@ const Product = () => {
                   <span className='font-semibold'>Kategorie: </span>
                   {product.categoryOfYheGame}min
                 </p>
-                <p className='mt-2 ml-2 text-[18px]'>
-                  {userInfo != null ? (
-                    <a href={`tel:${userInfo?.phoneNumber}`} className='underline'>
-                      Zadzwoń na numer {userInfo.phoneNumber}
-                    </a>
-                  ) : (
-                    <span>Numer nie jest zdefiniowany</span>
-                  )}
-                </p>
+                <div>
+                  <p className='mt-2 ml-2 text-[18px]'>
+                    {userInfo != null ? (
+                      <a href={`tel:${userInfo?.phoneNumber}`} className='underline'>
+                        Zadzwoń na numer {userInfo.phoneNumber}
+                      </a>
+                    ) : (
+                      <span>Numer nie jest zdefiniowany</span>
+                    )}
+                  </p>
+                  <p className='mt-2 ml-2 text-[18px]'>
+                    {userInfo != null && (
+                      <a href={`${userInfo?.facebookUrl}`} className='underline'>
+                        Facebook
+                      </a>
+                    )}
+                    {/* {userInfo != null && userInfo.facebookUrl != undefined ? (
+                      <a href={`${userInfo?.facebookUrl}`} className='underline'>
+                        Facebook
+                      </a>
+                    ) : (
+                      <span>Facebook nie jest zdefiniowany</span>
+                    )} */}
+                  </p>
+                </div>
                 <p className='mt-4 text-[40px] text-red-600 font-bold text-center md:text-left'>
                   {product.price}zl
                 </p>

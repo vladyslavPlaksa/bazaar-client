@@ -13,6 +13,7 @@ import {
   SignIn,
   SignUp,
   WrongPage,
+  AccountInfChange,
 } from "./components";
 import { auth } from "./api/firebase";
 import * as ROUTES from "./constants/routes";
@@ -64,6 +65,15 @@ function App() {
             element={
               <ProtectedRouteNonAuthorized user={user ? true : false}>
                 <Account navigate={navigate} />
+              </ProtectedRouteNonAuthorized>
+            }
+          />
+          <Route
+            exact
+            path={ROUTES.ACCOUNT_INF_CHANGE}
+            element={
+              <ProtectedRouteNonAuthorized user={user ? true : false}>
+                <AccountInfChange navigate={navigate} />
               </ProtectedRouteNonAuthorized>
             }
           />

@@ -3,6 +3,7 @@ export { default as SignUp } from "./SignUp";
 export { default as Homepage } from "./Homepage";
 export { default as Navbar } from "./Navbar";
 export { default as Account } from "./Account";
+export { default as AccountInfChange } from "./AccountInfChange";
 export { default as ProtectedRouteAuthorized } from "./ProtectedRouteAuthorized";
 export { default as ProtectedRouteNonAuthorized } from "./ProtectedRouteNonAuthorized";
 export { default as WrongPage } from "./WrongPage";

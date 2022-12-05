@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { getDocs, query, where } from "firebase/firestore";
+import { Link } from "react-router-dom";
+
 import { auth, colRefUserInfo } from "../api/firebase";
 import AddAnnouncementButton from "./AddAnnouncementButton";
 import UserAnnouncements from "./UserAnnouncements";
+import * as ROUTES from "../constants/routes";
 
 const Account = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -15,7 +18,7 @@ const Account = () => {
     const q = query(colRefUserInfo, where("uid", "==", `${auth.currentUser.uid}`));
 
     getDocs(q).then((snapshot) => {
-      console.log("data", snapshot);
+      // console.log("data", snapshot);
       if (snapshot.docs.length > 0) {
         // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
         setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
@@ -79,6 +82,9 @@ const Account = () => {
         <div>
           {userInfo !== null ? userInfo.phoneNumber : "Urzytkownik nie podał numer telefonu"}
         </div>
+        <Link to={ROUTES.ACCOUNT_INF_CHANGE}>
+          <span className='text-[32px] font-bold'>Change Account Inf</span>
+        </Link>
       </div>
       <UserAnnouncements />
     </>
