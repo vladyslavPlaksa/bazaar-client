@@ -17,6 +17,7 @@
     "react/prop-types": 0,
     "react/react-in-jsx-scope": "off",
     "no-unused-vars": "warn",
-    "no-undef": "warn"
+    "no-undef": "warn",
+    "no-console": ["error", { "allow": ["warn", "error"] }]
   }
 }

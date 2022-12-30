@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-import { colRefUserInfo, db } from "../api/firebase";
+import { db } from "../api/firebase";
 
 const Product = () => {
   const [product, setProduct] = useState(null);
@@ -10,10 +10,10 @@ const Product = () => {
 
   //! GET ":productCode" from URL
   const productCode = useParams().productCode;
-  const docRef = doc(db, "saleAnnouncements", productCode);
+  const docRefSaleAnnouncement = doc(db, "saleAnnouncements", productCode);
 
   useEffect(() => {
-    getDoc(docRef).then((doc) => {
+    getDoc(docRefSaleAnnouncement).then((doc) => {
       console.warn("Request was made!!");
       setProduct({ ...doc.data(), id: doc.id });
     });
@@ -22,11 +22,11 @@ const Product = () => {
   useEffect(() => {
     // console.log("Product info", product);
     if (product != null) {
-      const q = query(colRefUserInfo, where("uid", "==", product.uid));
+      const docRefCurrentUserInfo = doc(db, "userInfo", product.uid);
 
-      getDocs(q).then((snapshot) => {
-        // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
-        setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
+      getDoc(docRefCurrentUserInfo).then((snapshot) => {
+        // console.log({ ...snapshot.data(), id: snapshot.id });
+        setUserInfo({ ...snapshot.data(), id: snapshot.id });
       });
     }
   }, [product]);
@@ -62,7 +62,7 @@ const Product = () => {
                 </p>
                 <div>
                   <p className='mt-2 ml-2 text-[18px]'>
-                    {userInfo != null ? (
+                    {userInfo != null && userInfo.phoneNumber !== null ? (
                       <a href={`tel:${userInfo?.phoneNumber}`} className='underline'>
                         Zadzwoń na numer {userInfo.phoneNumber}
                       </a>
@@ -71,18 +71,17 @@ const Product = () => {
                     )}
                   </p>
                   <p className='mt-2 ml-2 text-[18px]'>
-                    {userInfo != null && (
-                      <a href={`${userInfo?.facebookUrl}`} className='underline'>
-                        Facebook
-                      </a>
-                    )}
-                    {/* {userInfo != null && userInfo.facebookUrl != undefined ? (
-                      <a href={`${userInfo?.facebookUrl}`} className='underline'>
+                    {userInfo != null && userInfo.facebookUrl != "null" ? (
+                      <a
+                        href={`${userInfo.facebookUrl}`}
+                        className='underline'
+                        target='_blank'
+                        rel='noreferrer'>
                         Facebook
                       </a>
                     ) : (
                       <span>Facebook nie jest zdefiniowany</span>
-                    )} */}
+                    )}
                   </p>
                 </div>
                 <p className='mt-4 text-[40px] text-red-600 font-bold text-center md:text-left'>

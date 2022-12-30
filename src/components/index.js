@@ -1,6 +1,7 @@
+export { default as Homepage } from "./Homepage";
 export { default as SignIn } from "./SignIn";
 export { default as SignUp } from "./SignUp";
-export { default as Homepage } from "./Homepage";
+export { default as Search } from "./Search";
 export { default as Navbar } from "./Navbar";
 export { default as Account } from "./Account";
 export { default as AccountInfChange } from "./AccountInfChange";

@@ -1,36 +1,45 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
-import { auth, colRefUserInfo } from "../api/firebase";
-import AddAnnouncementButton from "./AddAnnouncementButton";
+import { auth, db } from "../api/firebase";
 import UserAnnouncements from "./UserAnnouncements";
 import * as ROUTES from "../constants/routes";
+import { HiOutlineLogout } from "react-icons/hi";
+import { signOut } from "firebase/auth";
 
-const Account = () => {
+const Account = ({ navigate }) => {
   const [userInfo, setUserInfo] = useState(null);
+
+  const docRefCurrentUserInfo = doc(db, "userInfo", auth?.currentUser?.uid);
 
   const userPhoto = auth.currentUser.photoURL;
   const testPhoto =
     "https://firebasestorage.googleapis.com/v0/b/game-secondhand-app.appspot.com/o/user-icon-default%2Fuser-default-icon.jpg?alt=media&token=25598f5a-c32f-4c74-b0cd-0a8ef46cb4b1";
-  useEffect(() => {
-    const q = query(colRefUserInfo, where("uid", "==", `${auth.currentUser.uid}`));
 
-    getDocs(q).then((snapshot) => {
-      // console.log("data", snapshot);
-      if (snapshot.docs.length > 0) {
-        // console.log("User Info", { ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
-        setUserInfo({ ...snapshot.docs[0].data(), id: snapshot.docs[0].id });
-      } else {
-        console.warn("User doesn't have phone number in firestore");
+  useEffect(() => {
+    getDoc(docRefCurrentUserInfo).then((snapshot) => {
+      if (snapshot.exists()) {
+        // console.log({ ...snapshot.data(), id: snapshot.id });
+        setUserInfo({ ...snapshot.data(), id: snapshot.id });
       }
     });
   }, []);
 
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.warn("User signed out");
+        // navigate(ROUTES.HOMEPAGE);
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  };
+
   return (
     <>
-      <AddAnnouncementButton />
       <div className='relative'>
         <svg
           className='absolute top-[250px] right-0'
@@ -72,7 +81,12 @@ const Account = () => {
           />
         </svg>
       </div>
-      <div className='flex justify-center items-center flex-col my-5'>
+      <div className='flex justify-center items-center flex-col my-5 relative'>
+        <Link
+          onClick={logOut}
+          className='text-[30px] md:text-[40px] absolute top-28 md:top-5 right-16 md:right-[200px]'>
+          <HiOutlineLogout title='Wyloguj' />
+        </Link>
         <img
           src={userPhoto != null ? userPhoto : testPhoto}
           alt='User photo'

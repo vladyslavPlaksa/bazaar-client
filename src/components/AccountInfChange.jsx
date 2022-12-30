@@ -1,70 +1,125 @@
-import React from "react";
-import { query, setDoc, where, doc, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
-import { auth, colRefUserInfo, db } from "../api/firebase";
+import { auth, db } from "../api/firebase";
+import { useSearchParams } from "react-router-dom";
 
-const AccountInfChange = () => {
+const AccountInfChange = ({ isNewUser }) => {
+  const [isExist, setIsExist] = useState(null);
+
+  const docRefCurrentUserInfo = doc(db, "userInfo", auth?.currentUser?.uid);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // console.log(searchParams.get("isNewUser"));
+
+  useEffect(() => {
+    if (searchParams.get("isNewUser") != null) {
+      setIsExist(false);
+      isNewUser(true);
+    } else {
+      getDoc(docRefCurrentUserInfo).then((snapshot) => {
+        // console.log(snapshot.exists());
+
+        setIsExist(snapshot.exists());
+      });
+    }
+  }, []);
+
   const changeData = (e) => {
     e.preventDefault();
 
-    const q = query(colRefUserInfo, where("uid", "==", `${auth.currentUser.uid}`));
-
-    getDocs(q).then((snapshot) => {
-      console.log(snapshot.docs[0].id);
-
-      const docRef = doc(colRefUserInfo, snapshot.docs[0].id);
-
-      setDoc(docRef, {
-        phoneNumber: `+48${e?.target?.phoneNumber?.value}`,
-        facebookUrl: e?.target?.facebookUrl?.value,
-        uid: auth.currentUser.uid,
-      }).then(() => {
-        console.warn("Data was changed");
-      });
-    });
-
-    // docRef
-    //   .get()
-    //   .then(function (thisDoc) {
-    //     if (thisDoc.exists) {
-    //       //user is already there, write only last login
-    //       o.lastLoginDate = Date.now();
-    //       docRef.update(o);
-    //     } else {
-    //       //new user
-    //       o.displayName = firebase.auth().currentUser.displayName;
-    //       o.accountCreatedDate = Date.now();
-    //       o.lastLoginDate = Date.now();
-    //       // Send it
-    //       docRef.set(o);
-    //     }
-    //     toast("Welcome " + firebase.auth().currentUser.displayName);
-    //   })
-    //   .catch(function (error) {
-    //     console.error(error.message);
-    //   });
+    if (isExist) {
+      updateData(e);
+    } else {
+      setData(e);
+    }
   };
+
+  const updateData = (e) => {
+    let configUpdatedData;
+
+    if (e.target.phoneNumber.value != "" && e.target.facebookUrl.value != "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "1");
+
+      configUpdatedData = {
+        phoneNumber: `+48${e.target.phoneNumber.value}`,
+        facebookUrl: e.target.facebookUrl.value,
+      };
+    } else if (e.target.phoneNumber.value != "" && e.target.facebookUrl.value == "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "2");
+
+      configUpdatedData = {
+        phoneNumber: `+48${e.target.phoneNumber.value}`,
+      };
+    } else if (e.target.phoneNumber.value == "" && e.target.facebookUrl.value != "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "3");
+
+      configUpdatedData = {
+        facebookUrl: e.target.facebookUrl.value,
+      };
+    }
+
+    updateDoc(docRefCurrentUserInfo, configUpdatedData).then(() => {
+      console.warn("Data was updated");
+    });
+  };
+
+  const setData = (e) => {
+    let configSetData;
+
+    if (e.target.phoneNumber.value != "" && e.target.facebookUrl.value != "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "4");
+      configSetData = {
+        phoneNumber: `+48${e.target.phoneNumber.value}`,
+        facebookUrl: e.target.facebookUrl.value,
+      };
+    } else if (e.target.phoneNumber.value != "" && e.target.facebookUrl.value == "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "5");
+      configSetData = {
+        phoneNumber: `+48${e.target.phoneNumber.value}`,
+        facebookUrl: null,
+      };
+    } else if (e.target.phoneNumber.value == "" && e.target.facebookUrl.value != "") {
+      // console.log(e.target.phoneNumber.value, e.target.facebookUrl.value, "6");
+      configSetData = {
+        phoneNumber: null,
+        facebookUrl: e.target.facebookUrl.value,
+      };
+    }
+
+    setDoc(docRefCurrentUserInfo, configSetData).then(() => {
+      console.warn("Data was set");
+      isNewUser(false);
+    });
+  };
+
   return (
     <div className='flex justify-center items-center h-[80vh]'>
-      <form onSubmit={changeData} className='flex flex-col bg-gray-300 p-10 rounded'>
-        <label htmlFor='phoneNumber'>Change your phone number</label>
-        <input
-          type='text'
-          id='phoneNumber'
-          name='phoneNumber'
-          maxLength={9}
-          autoComplete='tel-national'
-          className='border-solid border-black border-2 rounded px-5 py-2 mb-2'
-        />
-        <label htmlFor='facebookUrl'>Change your Facebook link</label>
-        <input
-          type='text'
-          id='facebookUrl'
-          name='facebookUrl'
-          className='border-solid border-black border-2 rounded px-5 py-2 mb-2'
-        />
-        <input type='submit' />
-      </form>
+      <div className='w-[75%] flex justify-start items-center bg-gray-200 p-10 rounded'>
+        <form onSubmit={changeData} className='w-full md:w-1/2 flex flex-col'>
+          {!isExist && (
+            <p className='text-red-600 font-semibold text-l pb-3'>Dodaj swój numer telefonu</p>
+          )}
+          <input
+            type='text'
+            id='phoneNumber'
+            name='phoneNumber'
+            maxLength={9}
+            placeholder='Dodaj/zmień swój numer telefonu'
+            autoComplete='tel-national'
+            className='border-solid border-black border-2 rounded px-5 py-2 mb-2'
+          />
+          <input
+            type='text'
+            id='facebookUrl'
+            name='facebookUrl'
+            placeholder='Dodaj/zmień link do Facebooka'
+            className='border-solid border-black border-2 rounded px-5 py-2 mb-2'
+          />
+          <input type='submit' />
+        </form>
+      </div>
     </div>
   );
 };

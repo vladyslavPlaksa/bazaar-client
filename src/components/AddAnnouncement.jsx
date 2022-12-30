@@ -177,8 +177,8 @@ const AddAnnouncement = ({ user }) => {
   }, [search]);
 
   return (
-    <div>
-      <div className='relative w-full hidden md:block'>
+    <div className='mb-20 relative z-0'>
+      <div className='relative w-full hidden md:block z-0'>
         <svg
           className='absolute top-[250px] right-0'
           width='215'
@@ -389,7 +389,7 @@ const AddAnnouncement = ({ user }) => {
             <form
               ref={announcementForm}
               onSubmit={addAnnouncementForm}
-              className='flex justify-center items-center flex-col mt-4 bg-gray-300 rounded p-3 md:px-10 md:py-6'>
+              className='flex justify-center items-center flex-col mt-4 bg-gray-300 rounded p-3 md:px-10 md:py-6 z-10 relative'>
               <input
                 type='text'
                 name='nameOfYheGame'

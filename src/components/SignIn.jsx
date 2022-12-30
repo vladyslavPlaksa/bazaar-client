@@ -1,10 +1,15 @@
 import React from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  fetchSignInMethodsForEmail,
+  getRedirectResult,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { Link } from "react-router-dom";
 import { BsFacebook, BsGoogle } from "react-icons/bs";
 
-import { auth, signInWithFacebook, signInWithGoogle } from "../api/firebase";
+import { auth, db, signInWithFacebook, signInWithGoogle } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
+import { doc, getDoc } from "firebase/firestore";
 
 const SignIn = ({ navigate }) => {
   const doSignInUser = (form) => {
@@ -23,6 +28,38 @@ const SignIn = ({ navigate }) => {
         console.error(err.message);
       });
   };
+
+  getRedirectResult(auth)
+    .then((result) => {
+      // console.log(result);
+
+      if (result !== null) {
+        const user = result.user;
+        // console.log(user.uid);
+        const docRefCurrentUserInfo = doc(db, "userInfo", user.uid);
+
+        getDoc(docRefCurrentUserInfo).then((snapshot) => {
+          let isExist = snapshot.exists();
+          // console.log(isExist);
+
+          navigate(isExist ? ROUTES.HOMEPAGE : `${ROUTES.ACCOUNT_INF_CHANGE}?isNewUser=${isExist}`);
+        });
+
+        // navigate(ROUTES.ACCOUNT_INF_CHANGE);
+      }
+    })
+    .catch((error) => {
+      console.error({ error });
+
+      var email = error.customData.email;
+
+      if (error.code === "auth/account-exists-with-different-credential") {
+        fetchSignInMethodsForEmail(auth, email).then((providers) => {
+          console.warn(providers);
+        });
+      }
+    });
+
   return (
     <div className='flex justify-center items-center flex-col h-[75vh] w-full'>
       <div className='bg-gray-300 p-10 rounded max-w-[400px] mx-[5%]'>

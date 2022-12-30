@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { addDoc } from "firebase/firestore";
-// import { Navigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 
-import { auth, colRefUserInfo, storage } from "../api/firebase";
+import { auth, db, storage } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
 
 const SignUp = ({ navigate }) => {
-  // if (auth.currentUser !== null) {
-  //   console.warn("This page unavaluable when you authorized");
-  //   return <Navigate to={ROUTES.HOMEPAGE} replace />;
-  // }
-
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState();
   const [form, setForm] = useState(null);
+  const [docRefCurrentUserInfo, setDocRefCurrentUserInfo] = useState(null);
 
   useEffect(() => {
     if (form !== null) {
@@ -30,6 +25,8 @@ const SignUp = ({ navigate }) => {
         createUserWithEmailAndPassword(auth, email, password)
           .then((cred) => {
             // console.log("Create user: ", cred);
+
+            setDocRefCurrentUserInfo(doc(db, "userInfo", cred.user.uid));
 
             if (imageUpload !== null) {
               const imageRef = ref(storage, `${cred.user.uid}/user-photo`);
@@ -62,9 +59,10 @@ const SignUp = ({ navigate }) => {
         displayName: userName,
         photoURL: imageUrl,
       }).then(() => {
-        addDoc(colRefUserInfo, {
-          uid: auth.currentUser.uid,
+        setDoc(docRefCurrentUserInfo, {
+          // uid: auth.currentUser.uid,
           phoneNumber: `+48${phoneNumber}`,
+          facebookUrl: "null",
         }).then(() => {
           console.warn("Data was updated");
           form.target.reset();
@@ -76,7 +74,7 @@ const SignUp = ({ navigate }) => {
 
   return (
     <div className='flex justify-center items-center flex-col h-[75vh]'>
-      <div className='bg-gray-300 p-5 rounded max-w-[400px] mx-[5%]'>
+      <div className='bg-gray-300 p-5 rounded w-[350px] md:w-[500px]'>
         <form
           onSubmit={(form) => setForm(form)}
           className='flex justify-center items-center flex-col'>

@@ -1,70 +1,51 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { HiOutlineLogout } from "react-icons/hi";
 
 import { auth } from "../api/firebase";
 import * as ROUTES from "../constants/routes";
 import FirebaseContext from "../contexts/firebase";
 
-const Navbar = ({ navigate }) => {
-  const user = useContext(FirebaseContext);
+const Navbar = () => {
+  const userIs = useContext(FirebaseContext);
 
-  // useEffect(() => {
-  // console.log(auth);
-  // console.log(db);
-
-  // onAuthStateChanged(auth, (user) => {
-  //   console.log("user status changed:", user);
-  //   setUser(user);
-  // });
-  // }, []);
+  const testPhoto =
+    "https://firebasestorage.googleapis.com/v0/b/game-secondhand-app.appspot.com/o/user-icon-default%2Fuser-default-icon.jpg?alt=media&token=25598f5a-c32f-4c74-b0cd-0a8ef46cb4b1";
 
   return (
-    <div className='lg:pr-[5%] text-[20px] md:text-[27px] mb-5 bg-[#9A3737]'>
-      {user ? <NavbarAuth navigate={navigate} /> : <NavbarNonAuth />}
+    <div className='w-full fixed bottom-0 z-50 flex justify-center items-center text-[20px] md:relative  md:text-[25px] font-semibold text-white md:mb-5 bg-[#9A3737]'>
+      <div className='flex justify-between w-full md:w-[90%] py-5 px-2 md:p-5'>
+        <div className='flex justify-center items-center'>
+          <Link to={ROUTES.HOMEPAGE}>Główna</Link>
+        </div>
+        <ul className='w-[290px] md:w-[450px] flex justify-between items-center'>
+          <li>
+            <Link to={ROUTES.SEARCH}>Szukaj</Link>
+          </li>
+          {!userIs ? (
+            <li>
+              <Link to={ROUTES.SIGN_IN}>Zaloguj</Link>
+            </li>
+          ) : (
+            <li>
+              <Link to={ROUTES.ACCOUNT}>
+                <img
+                  src={auth.currentUser.photoURL != null ? auth.currentUser.photoURL : testPhoto}
+                  alt='User photo'
+                  className='w-[50px] h-[50px] rounded-full'
+                />
+              </Link>
+            </li>
+          )}
+          <li>
+            <Link
+              to={ROUTES.ADD_ANNOUNCEMENT}
+              className='bg-white rounded-md px-[12px] py-[9px] text-[15px] md:px-[20px] md:py-[12px] md:text-[22px] text-[#9A3737]'>
+              Dodaj Ogłoszenie
+            </Link>
+          </li>
+        </ul>
+      </div>
     </div>
-  );
-};
-
-const NavbarAuth = ({ navigate }) => {
-  const logOut = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("user signed out");
-        navigate(ROUTES.HOMEPAGE);
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  };
-  return (
-    <ul className='flex justify-end p-5'>
-      <li className='mr-3'>
-        <Link to={ROUTES.HOMEPAGE}>Homepage</Link>
-      </li>
-      <li className='mr-3'>
-        <Link to={ROUTES.ACCOUNT}>Account</Link>
-      </li>
-      <li>
-        <Link onClick={logOut} className='text-[30px] md:text-[40px]'>
-          <HiOutlineLogout title='Wyloguj' />
-        </Link>
-      </li>
-    </ul>
-  );
-};
-
-const NavbarNonAuth = () => {
-  return (
-    <ul className='flex justify-end p-5'>
-      <li className='mr-3'>
-        <Link to={ROUTES.HOMEPAGE}>Homepage</Link>
-      </li>
-      <li>
-        <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-      </li>
-    </ul>
   );
 };
 export default Navbar;

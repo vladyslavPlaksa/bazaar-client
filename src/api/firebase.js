@@ -5,7 +5,6 @@ import {
   FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
-  // signInWithPopup,
   signInWithRedirect,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
@@ -23,12 +22,13 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 export const db = getFirestore();
-export const colRefAnnouncement = collection(db, "saleAnnouncements");
-export const colRefUserInfo = collection(db, "userInfo");
-
 export const auth = getAuth();
 export const storage = getStorage();
 
+export const colRefAnnouncement = collection(db, "saleAnnouncements");
+export const colRefUserInfo = collection(db, "userInfo");
+
+//! SignIn with Google and Facebook
 auth.useDeviceLanguage();
 
 const providerGoodle = new GoogleAuthProvider();
