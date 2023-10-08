@@ -1,23 +1,153 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+        "browser": true,
+        "worker": true,
+        "es2022": true,
+        "es6": true,
+        "node": true
     },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "plugins": ["react"],
-  "rules": {
-    // "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
-    "react/prop-types": 0,
-    "react/react-in-jsx-scope": "off",
-    "no-unused-vars": "warn",
-    "no-undef": "warn",
-    "no-console": ["error", { "allow": ["warn", "error"] }]
-  }
+    "extends": [
+        "eslint:recommended",
+        "airbnb-base",
+        "plugin:import/recommended",
+        "plugin:unicorn/recommended",
+        "plugin:prettier/recommended" // has to be the last one
+    ],
+    "plugins": ["unicorn", "import", "prettier"],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "overrides": [],
+    // "parser": "",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "ecmaFeatures": {
+            "jsx": true,
+            "flow": true,
+            "impliedStrict": true,
+            "classes": true,
+            "experimentalObjectRestSpread": true
+        },
+        // "requireConfigFile": false, // @todo remove it after babel configuration
+        "sourceType": "module"
+    },
+    "rules": {
+        "one-var": ["error", { "uninitialized": "consecutive" }],
+        // "import/no-unresolved": ["error", { "commonjs": true, "amd": true }],
+        // "func-names": "off",
+        // "camelcase": "off",
+        // "no-useless-return": "off",
+        // "no-else-return": "off",
+        // "no-shadow": "off",
+        // "no-nested-ternary": "off",
+        // "no-unused-expressions": "off",
+        // "dot-notation": "off",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
+        "no-unused-vars": [
+            "warn",
+            {
+                "varsIgnorePattern": "^[A-Z].*$"
+            }
+        ],
+        "object-shorthand": "off",
+        "class-methods-use-this": "off",
+        "no-restricted-syntax": [
+            "off",
+            {
+                "selector": "ForOfStatement",
+                "message": "iterators/generators require regenerator-runtime, which is too heavyweight for this guide to allow them. Separately, loops should be avoided in favor of array iterations"
+            },
+            {
+                "selector": "ForInStatement",
+                "message": "iterators/generators require regenerator-runtime, which is too heavyweight for this guide to allow them. Separately, loops should be avoided in favor of array iterations"
+            },
+            {
+                "selector": "LabeledStatement",
+                "message": "iterators/generators require regenerator-runtime, which is too heavyweight for this guide to allow them. Separately, loops should be avoided in favor of array iterations"
+            },
+            {
+                "selector": "WithStatement",
+                "message": "iterators/generators require regenerator-runtime, which is too heavyweight for this guide to allow them. Separately, loops should be avoided in favor of array iterations"
+            }
+        ],
+        // important rule
+        "space-before-function-paren": [
+            "error",
+            {
+                "named": "never",
+                "anonymous": "always",
+                "asyncArrow": "always"
+            }
+        ],
+        // @todo need to find out analogue for vanilla js/vue
+        // "react-use-props/require": [
+        //     2,
+        //     { "element": "svg", "props": ["width", "height"] },
+        //     { "element": "img", "props": ["width", "height"] },
+        //     { "element": "Image", "props": ["width", "height"] },
+        //     { "element": "Picture.Item", "props": ["width", "height"] },
+        //     { "element": "iframe", "props": ["width", "height"] },
+        //     { "element": "video", "props": ["width", "height"] }
+        // ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "mjs": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never",
+                "json": "always",
+                "svg": "always"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        // Unicorn plugin
+        // @todo setup it https://github.com/sindresorhus/eslint-plugin-unicorn#preset-configs
+        "unicorn/better-regex": "error",
+        "prettier/prettier": ["error"],
+        "unicorn/filename-case": [
+            "warn",
+            {
+                "cases": {
+                    "camelCase": true,
+                    "pascalCase": true
+                }
+            }
+        ]
+    },
+    "settings": {
+        "polyfills": [
+            // Example of marking entire API and all methods and properties as polyfilled
+            "Promise",
+            // Example of marking specific method of an API as polyfilled
+            "WebAssembly.compile",
+            // Example of API with no property (i.e. a function)
+            "fetch",
+            // Example of instance method, must add `.prototype.`
+            "Array.prototype.push"
+        ],
+        "import/extensions": [".js", ".mjs", ".jsx", ".ts", ".tsx"],
+        "import/resolver": {
+            "alias": {
+                "map": [
+                    ["@app", "./app"],
+                    ["@components", "./components/"],
+                    ["@models", "./models"],
+                    ["@public", "./public"],
+                    ["@styles", "./styles"],
+                    ["@utils", "./utils"]
+                ],
+                "extensions": [".ts", ".js", ".jsx", ".json", ".css"]
+            }
+            // "webpack": {
+            //     "config": "./config/webpack.config.js"
+            // }
+        },
+        "import/ignore": ["css", "scss", "less", "node_modules"], // \.(scss|less|css)$
+        "import/internal-regex": "^@/*"
+    }
 }
